@@ -1,0 +1,44 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Users\davi.lima\AppData\Roaming\npm\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.0.0
+2 info using node@v22.11.0
+3 silly config load:file:C:\Users\davi.lima\AppData\Roaming\npm\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\davi.lima\Downloads\Evolui-GS\.npmrc
+5 silly config load:file:C:\Users\davi.lima\.npmrc
+6 silly config load:file:C:\Users\davi.lima\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm exec husky-init
+8 verbose argv "exec" "--" "husky-init"
+9 verbose logfile logs-max:10 dir:C:\Users\davi.lima\Downloads\Evolui-GS\tmpnodejsnpm-cache\_logs\2025-11-14T22_31_32_560Z-
+10 verbose logfile C:\Users\davi.lima\Downloads\Evolui-GS\tmpnodejsnpm-cache\_logs\2025-11-14T22_31_32_560Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+14 http fetch GET 200 https://registry.npmjs.org/husky-init 870ms (cache miss)
+15 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+16 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+17 silly idealTree buildDeps
+18 silly fetch manifest husky-init@8.0.0
+19 silly packumentCache full:https://registry.npmjs.org/husky-init cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/husky-init 49ms (cache miss)
+21 silly packumentCache full:https://registry.npmjs.org/husky-init set size:undefined disposed:false
+22 silly placeDep ROOT husky-init@8.0.0 OK for:  want: 8.0.0
+23 silly fetch manifest husky@^8.0.0
+24 silly packumentCache full:https://registry.npmjs.org/husky cache-miss
+25 http fetch GET 200 https://registry.npmjs.org/husky 1255ms (cache miss)
+26 silly packumentCache full:https://registry.npmjs.org/husky set size:undefined disposed:false
+27 silly placeDep ROOT husky@8.0.3 OK for: husky-init@8.0.0 want: ^8.0.0
+28 silly reify moves {}
+29 silly audit bulk request { 'husky-init': [ '8.0.0' ], husky: [ '8.0.3' ] }
+30 http cache husky@https://registry.npmjs.org/husky/-/husky-8.0.3.tgz 0ms (cache hit)
+31 http cache husky-init@https://registry.npmjs.org/husky-init/-/husky-init-8.0.0.tgz 0ms (cache hit)
+32 silly tarball no local data for husky@https://registry.npmjs.org/husky/-/husky-8.0.3.tgz. Extracting by manifest.
+33 silly tarball no local data for husky-init@https://registry.npmjs.org/husky-init/-/husky-init-8.0.0.tgz. Extracting by manifest.
+34 http fetch GET 200 https://registry.npmjs.org/husky/-/husky-8.0.3.tgz 137ms (cache miss)
+35 http fetch GET 200 https://registry.npmjs.org/husky-init/-/husky-init-8.0.0.tgz 137ms (cache miss)
+36 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 252ms
+37 silly audit report {}
+38 verbose cwd C:\Users\davi.lima\Downloads\Evolui-GS
+39 verbose os Windows_NT 10.0.22631
+40 verbose node v22.11.0
+41 verbose npm  v11.0.0
+42 verbose exit 0
+43 info ok
