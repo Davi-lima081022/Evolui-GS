@@ -82,7 +82,7 @@ export default function CareerScreen({ navigation }) {
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
           >
-            <Text style={styles.title}>Monte sua carreira 🚀</Text>
+            <Text style={styles.title}>Monte sua carreira </Text>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Profissões / Experiências</Text>
