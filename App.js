@@ -15,11 +15,14 @@ import SettingsScreen from './src/screen/SettingsScreen';
 import TrainingScreen from './src/screen/TrainingScreen';
 import CoursesScreen from './src/screen/CoursesScreen';
 import PartnersScreen from './src/screen/PartnersScreen';
-import TalksScreen from './src/screen/TalksScreen'; // 🔹 Nova tela adicionada
+import TalksScreen from './src/screen/TalksScreen';
+
+// 🔹 NOVO IMPORT
+import AboutScreen from './src/screen/AboutScreen'; // <-- Adicionado
 
 const Stack = createNativeStackNavigator();
 
-// 🔹 Cabeçalho personalizado (somente “Voltar” + seta)
+// 🔹 Cabeçalho personalizado
 const CustomHeader = ({ navigation, back }) => (
   <View
     style={{
@@ -72,31 +75,18 @@ export default function App() {
         <Stack.Screen name="Career" component={CareerScreen} options={{ title: 'Minha Carreira' }} />
         <Stack.Screen name="Objectives" component={ObjectivesScreen} options={{ title: 'Objetivos Pessoais' }} />
 
-        {/* 🔹 Telas da trilha com cabeçalho limpo */}
+        {/* 🔹 Telas da trilha */}
+        <Stack.Screen name="KnowledgeTrack" component={KnowledgeTrackScreen} options={{ title: '' }} />
+        <Stack.Screen name="Training" component={TrainingScreen} options={{ title: '' }} />
+        <Stack.Screen name="Courses" component={CoursesScreen} options={{ title: '' }} />
+        <Stack.Screen name="Partners" component={PartnersScreen} options={{ title: '' }} />
+        <Stack.Screen name="Talks" component={TalksScreen} options={{ title: '' }} />
+
+        {/* 🔹 NOVA TELA (Sobre o App) */}
         <Stack.Screen
-          name="KnowledgeTrack"
-          component={KnowledgeTrackScreen}
-          options={{ title: '' }}
-        />
-        <Stack.Screen
-          name="Training"
-          component={TrainingScreen}
-          options={{ title: '' }}
-        />
-        <Stack.Screen
-          name="Courses"
-          component={CoursesScreen}
-          options={{ title: '' }}
-        />
-        <Stack.Screen
-          name="Partners"
-          component={PartnersScreen}
-          options={{ title: '' }}
-        />
-        <Stack.Screen
-          name="Talks"
-          component={TalksScreen}
-          options={{ title: '' }}
+          name="About"
+          component={AboutScreen}
+          options={{ title: 'Sobre o App' }}
         />
 
         <Stack.Screen
