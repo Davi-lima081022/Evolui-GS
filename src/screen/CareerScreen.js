@@ -69,11 +69,20 @@ export default function CareerScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={require('../../assets/Career.png')} // caminho da imagem
+      source={require('../../assets/Career.png')}
       style={styles.background}
       resizeMode="cover"
     >
       <View style={styles.overlay}>
+
+        {/* 🔹 Botão SOBRE no canto superior esquerdo */}
+        <TouchableOpacity
+          style={styles.aboutButton}
+          onPress={() => navigation.navigate("About")}
+        >
+          <Text style={styles.aboutText}>Sobre</Text>
+        </TouchableOpacity>
+
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={{ flex: 1 }}
@@ -154,6 +163,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.55)',
   },
+
+  /* 🔹 Botão Sobre */
+  aboutButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    zIndex: 20,
+  },
+  aboutText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '700',
+    textDecorationLine: 'underline',
+  },
+
   container: {
     flexGrow: 1,
     justifyContent: 'center',

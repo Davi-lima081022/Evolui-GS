@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-// Import das telas
+// Telas
 import WelcomeScreen from './src/screen/WelcomeScreen';
 import LoginScreen from './src/screen/LoginScreen';
 import RegisterScreen from './src/screen/RegisterScreen';
@@ -17,8 +17,8 @@ import CoursesScreen from './src/screen/CoursesScreen';
 import PartnersScreen from './src/screen/PartnersScreen';
 import TalksScreen from './src/screen/TalksScreen';
 
-// 🔹 NOVO IMPORT
-import AboutScreen from './src/screen/AboutScreen'; // <-- Adicionado
+// 🔹 NOVA TELA
+import AboutScreen from './src/screen/AboutScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +33,7 @@ const CustomHeader = ({ navigation, back }) => (
       paddingBottom: 10,
     }}
   >
+    {/* Botão VOLTAR */}
     {back && (
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -45,9 +46,23 @@ const CustomHeader = ({ navigation, back }) => (
         }}
       >
         <Ionicons name="chevron-back" size={22} color="#ffffff" />
-        <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>Voltar</Text>
+        <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>
+          Voltar
+        </Text>
       </TouchableOpacity>
     )}
+
+    {/* 🔹 Botão SOBRE O APP */}
+    <TouchableOpacity
+      onPress={() => navigation.navigate('About')}
+      style={{
+        position: 'absolute',
+        right: 15,
+        bottom: 12,
+      }}
+    >
+      <Ionicons name="information-circle-outline" size={26} color="#ffffff" />
+    </TouchableOpacity>
   </View>
 );
 
@@ -70,19 +85,20 @@ export default function App() {
           component={WelcomeScreen}
           options={{ headerShown: false }}
         />
+
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login' }} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Cadastro' }} />
         <Stack.Screen name="Career" component={CareerScreen} options={{ title: 'Minha Carreira' }} />
         <Stack.Screen name="Objectives" component={ObjectivesScreen} options={{ title: 'Objetivos Pessoais' }} />
 
-        {/* 🔹 Telas da trilha */}
+        {/* Trilhas */}
         <Stack.Screen name="KnowledgeTrack" component={KnowledgeTrackScreen} options={{ title: '' }} />
         <Stack.Screen name="Training" component={TrainingScreen} options={{ title: '' }} />
         <Stack.Screen name="Courses" component={CoursesScreen} options={{ title: '' }} />
         <Stack.Screen name="Partners" component={PartnersScreen} options={{ title: '' }} />
         <Stack.Screen name="Talks" component={TalksScreen} options={{ title: '' }} />
 
-        {/* 🔹 NOVA TELA (Sobre o App) */}
+        {/* Sobre o App */}
         <Stack.Screen
           name="About"
           component={AboutScreen}

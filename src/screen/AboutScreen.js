@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, ScrollView } from 'react-native';
-import { getCommitHash } from '../utils/commit'; // 🔹 importa função que lê o commit.txt
+import { getCommitInfo } from '../utils/commit';
 
 export default function AboutScreen() {
-  const [commitHash, setCommitHash] = useState("Carregando...");
+  const [commit, setCommit] = useState({ hash: "Carregando...", date: "Carregando..." });
 
   useEffect(() => {
-    const loadHash = async () => {
-      const hash = await getCommitHash();
-      setCommitHash(hash);
-    };
-    loadHash();
+    getCommitInfo().then(info => setCommit(info));
   }, []);
 
   return (
@@ -21,6 +17,7 @@ export default function AboutScreen() {
     >
       <View style={styles.overlay}>
         <ScrollView contentContainerStyle={styles.container}>
+          
           <Text style={styles.title}>Sobre o App</Text>
 
           <Text style={styles.text}>
@@ -33,13 +30,17 @@ export default function AboutScreen() {
           <Text style={styles.text}>1.0.0</Text>
 
           <Text style={styles.sectionTitle}>Commit de Referência</Text>
-          <Text style={styles.hash}>{commitHash}</Text>
+          <Text style={styles.hash}>{commit.hash}</Text>
+
+          <Text style={styles.sectionTitle}>Data do Commit</Text>
+          <Text style={styles.text}>{commit.date}</Text>
 
           <Text style={styles.sectionTitle}>Desenvolvido por</Text>
           <Text style={styles.text}>
-            Davi Alves de Lima{'\n'}
+            Davi Alves de Lima{"\n"}
             Aluno do curso de Desenvolvimento de Software Multiplataforma
           </Text>
+
         </ScrollView>
       </View>
     </ImageBackground>
