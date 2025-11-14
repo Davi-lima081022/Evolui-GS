@@ -74,15 +74,6 @@ export default function CareerScreen({ navigation }) {
       resizeMode="cover"
     >
       <View style={styles.overlay}>
-
-        {/* 🔹 Botão SOBRE no canto superior esquerdo */}
-        <TouchableOpacity
-          style={styles.aboutButton}
-          onPress={() => navigation.navigate("About")}
-        >
-          <Text style={styles.aboutText}>Sobre</Text>
-        </TouchableOpacity>
-
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={{ flex: 1 }}
@@ -124,6 +115,7 @@ export default function CareerScreen({ navigation }) {
                   data={filteredProfessions}
                   keyExtractor={(item) => item}
                   style={styles.list}
+                  nestedScrollEnabled={true}  // ✅ AJUSTE IMPORTANTÍSSIMO
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       style={styles.listItem}
@@ -164,24 +156,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.55)',
   },
 
-  /* 🔹 Botão Sobre */
-  aboutButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    zIndex: 20,
-  },
-  aboutText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: '700',
-    textDecorationLine: 'underline',
-  },
-
   container: {
     flexGrow: 1,
     justifyContent: 'center',
     padding: 25,
+    paddingTop: 120,
   },
   title: {
     fontSize: 26,
@@ -256,10 +235,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: 'center',
     marginTop: 30,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
     elevation: 5,
   },
   nextText: {
