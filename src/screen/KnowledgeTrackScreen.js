@@ -13,7 +13,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
-export default function KnowledgeTrackScreen({ navigation }) {
+export default function KnowledgeTrackScreen({ navigation, route }) {
+  // Dados vindos da tela anterior
+  const { selectedProfessions, skills, selectedObjectives } = route.params;
+
+  // Conteúdos da trilha (ATUALIZADO)
   const contents = [
     { 
       title: 'Cursos', 
@@ -31,22 +35,23 @@ export default function KnowledgeTrackScreen({ navigation }) {
       title: 'Palestras', 
       description: 'Participe de palestras com especialistas e líderes do setor.', 
       icon: 'mic-outline', 
-      route: 'Talks' // 🔹 Agora leva para a tela de Palestras
+      route: 'Talks' 
     },
     { 
-      title: 'Escolas Parceiras', 
-      description: 'Descubra instituições parceiras que oferecem ensino de qualidade.', 
-      icon: 'school-outline', 
-      route: 'Partners' 
+      title: 'Meus Progressos', 
+      description: 'Acompanhe sua evolução e trilhas concluídas.', 
+      icon: 'bar-chart-outline', 
+      route: 'Progress' 
     },
   ];
 
+  // Função de navegação
   const handleNavigation = (route) => {
-    if (route) {
-      navigation.navigate(route);
-    } else {
-      alert('Conteúdo em breve disponível!');
-    }
+    navigation.navigate(route, {
+      selectedProfessions,
+      skills,
+      selectedObjectives
+    });
   };
 
   return (
@@ -92,35 +97,12 @@ export default function KnowledgeTrackScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  container: {
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 40,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: '900',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 10,
-    textShadowColor: 'rgba(0,0,0,0.6)',
-    textShadowOffset: { width: 2, height: 2 },
-    textShadowRadius: 6,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#E5E5E5',
-    textAlign: 'center',
-    marginBottom: 35,
-  },
-  card: {
+  background: { flex: 1 },
+  overlay: { flex: 1, justifyContent: 'center' },
+  container: { paddingHorizontal: 20, paddingTop: 60, paddingBottom: 40 },
+  title: { fontSize: 30, fontWeight: '900', color: '#FFFFFF', textAlign: 'center', marginBottom: 10 },
+  subtitle: { fontSize: 16, color: '#E5E5E5', textAlign: 'center', marginBottom: 35 },
+  card: { 
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.10)',
@@ -132,27 +114,17 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.4,
     shadowRadius: 10,
-    elevation: 8,
+    elevation: 8
   },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 16,
+  iconContainer: { 
+    width: 48, 
+    height: 48, 
+    borderRadius: 24, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    marginRight: 16 
   },
-  textContainer: {
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#FFFFFF',
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: '#DADADA',
-    marginTop: 4,
-  },
+  textContainer: { flex: 1 },
+  cardTitle: { fontSize: 18, fontWeight: '700', color: '#FFFFFF' },
+  cardDescription: { fontSize: 14, color: '#DADADA', marginTop: 4 },
 });

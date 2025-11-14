@@ -14,7 +14,7 @@ import KnowledgeTrackScreen from './src/screen/KnowledgeTrackScreen';
 import SettingsScreen from './src/screen/SettingsScreen';
 import TrainingScreen from './src/screen/TrainingScreen';
 import CoursesScreen from './src/screen/CoursesScreen';
-import PartnersScreen from './src/screen/PartnersScreen';
+import ProgressScreen from './src/screen/ProgressScreen';
 import TalksScreen from './src/screen/TalksScreen';
 import AboutScreen from './src/screen/AboutScreen';
 
@@ -67,7 +67,7 @@ export default function App() {
       <Stack.Navigator
         initialRouteName="Welcome"
         screenOptions={{
-          header: ({ navigation, route, options, back }) => (
+          header: ({ navigation, back }) => (
             <CustomHeader navigation={navigation} back={back} />
           ),
           headerTransparent: true,
@@ -88,7 +88,7 @@ export default function App() {
         <Stack.Screen name="KnowledgeTrack" component={KnowledgeTrackScreen} options={{ title: '' }} />
         <Stack.Screen name="Training" component={TrainingScreen} options={{ title: '' }} />
         <Stack.Screen name="Courses" component={CoursesScreen} options={{ title: '' }} />
-        <Stack.Screen name="Partners" component={PartnersScreen} options={{ title: '' }} />
+        <Stack.Screen name="Progress" component={ProgressScreen} options={{ title: '' }} />
         <Stack.Screen name="Talks" component={TalksScreen} options={{ title: '' }} />
 
         <Stack.Screen

@@ -10,7 +10,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function ObjectivesScreen({ navigation }) {
+export default function ObjectivesScreen({ navigation, route }) {
+  // Recebendo dados da CareerScreen
+  const { selectedProfessions, skills } = route.params;
+
   const objectives = [
     'Conhecer sobre novas tecnologias',
     'Aprender a usar, na prática',
@@ -21,18 +24,25 @@ export default function ObjectivesScreen({ navigation }) {
   const [selected, setSelected] = useState([]);
 
   const toggleSelection = (item) => {
-    if (selected.includes(item)) {
-      setSelected(selected.filter((obj) => obj !== item));
-    } else {
-      setSelected([...selected, item]);
-    }
+    setSelected((prev) =>
+      prev.includes(item) ? prev.filter((obj) => obj !== item) : [...prev, item]
+    );
   };
 
   const canProceed = selected.length > 0;
 
+  const handleNext = () => {
+    if (!canProceed) return;
+    navigation.navigate('KnowledgeTrack', {
+      selectedProfessions,
+      skills,
+      selectedObjectives: selected,
+    });
+  };
+
   return (
     <ImageBackground
-      source={require('../../assets/Objectives.png')} // <-- coloque sua imagem aqui
+      source={require('../../assets/Objectives.png')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -58,7 +68,7 @@ export default function ObjectivesScreen({ navigation }) {
               <Text
                 style={[
                   styles.optionText,
-                  selected.includes(item) && { color: '#fff' },
+                  selected.includes(item) && { color: '#fff', fontWeight: '600' },
                 ]}
               >
                 {item}
@@ -68,7 +78,7 @@ export default function ObjectivesScreen({ navigation }) {
 
           <TouchableOpacity
             style={[styles.nextButton, !canProceed && styles.disabledButton]}
-            onPress={() => canProceed && navigation.navigate('KnowledgeTrack')}
+            onPress={handleNext}
             disabled={!canProceed}
           >
             <Text style={styles.nextText}>Próximo ➜</Text>
@@ -80,18 +90,9 @@ export default function ObjectivesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-  },
-  container: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
+  background: { flex: 1 },
+  overlay: { flex: 1 },
+  container: { flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: 20 },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
@@ -102,12 +103,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 4,
   },
-  subtitle: {
-    fontSize: 17,
-    color: '#ddd',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
+  subtitle: { fontSize: 17, color: '#ddd', marginBottom: 30, textAlign: 'center' },
   option: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -119,15 +115,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
   },
-  selectedOption: {
-    borderColor: '#1E90FF',
-    backgroundColor: 'rgba(30,144,255,0.35)',
-  },
-  optionText: {
-    fontSize: 16,
-    marginLeft: 10,
-    color: '#eee',
-  },
+  selectedOption: { borderColor: '#1E90FF', backgroundColor: 'rgba(30,144,255,0.35)' },
+  optionText: { fontSize: 16, marginLeft: 10, color: '#eee' },
   nextButton: {
     backgroundColor: '#1E90FF',
     padding: 15,
@@ -140,13 +129,6 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 5,
   },
-  disabledButton: {
-    backgroundColor: '#6BA8E6',
-    opacity: 0.7,
-  },
-  nextText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
+  disabledButton: { backgroundColor: '#6BA8E6', opacity: 0.7 },
+  nextText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
 });
