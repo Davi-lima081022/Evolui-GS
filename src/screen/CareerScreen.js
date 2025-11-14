@@ -82,7 +82,7 @@ export default function CareerScreen({ navigation }) {
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
           >
-            <Text style={styles.title}>Monte sua carreira </Text>
+            <Text style={styles.title}>Monte sua Historia </Text>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Profissões / Experiências</Text>
@@ -115,7 +115,7 @@ export default function CareerScreen({ navigation }) {
                   data={filteredProfessions}
                   keyExtractor={(item) => item}
                   style={styles.list}
-                  nestedScrollEnabled={true}  // ✅ AJUSTE IMPORTANTÍSSIMO
+                  nestedScrollEnabled={true}  
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       style={styles.listItem}
