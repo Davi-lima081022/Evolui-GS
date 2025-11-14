@@ -21,7 +21,7 @@ export default function AboutScreen() {
           <Text style={styles.title}>Sobre o App</Text>
 
           <Text style={styles.text}>
-            O **Evolui+** é um aplicativo desenvolvido para auxiliar profissionais
+            O **Evolui+** é um aplicativo desenvolvido para  ajudar profissionais
             no desenvolvimento contínuo de suas habilidades, oferecendo trilhas,
             cursos, treinamentos e conteúdos personalizados.
           </Text>
