@@ -1,25 +1,29 @@
-import * as FileSystem from 'expo-file-system/legacy';
+import { Asset } from "expo-asset";
 
 export async function getCommitInfo() {
-  const fileUri = FileSystem.documentDirectory + 'commit.txt';
-
   try {
-    const exists = await FileSystem.getInfoAsync(fileUri);
+    // Carrega commit.txt como asset
+    const asset = Asset.fromModule(require("../../assets/commit.txt"));
 
-    if (!exists.exists) {
-      return { hash: "N/A", date: "N/A" };
-    }
+    // Baixa o asset caso necessário
+    await asset.downloadAsync();
 
-    const content = await FileSystem.readAsStringAsync(fileUri);
+    // Lê o conteúdo local
+    const response = await fetch(asset.localUri);
+    const content = await response.text();
 
-    const [hash, date] = content.split('\n');
+    // Extrai hash e data
+    const [hash, date] = content.split("\n");
 
     return {
-      hash: hash || "N/A",
-      date: date || "N/A"
+      hash: hash?.trim() || "N/A",
+      date: date?.trim() || "N/A",
     };
   } catch (error) {
-    console.error("Erro ao ler commit.txt", error);
-    return { hash: "N/A", date: "N/A" };
+    console.log("Erro ao ler commit.txt:", error);
+    return {
+      hash: "Erro",
+      date: "Erro",
+    };
   }
 }
