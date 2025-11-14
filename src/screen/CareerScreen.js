@@ -36,7 +36,7 @@ export default function CareerScreen({ navigation }) {
     'Técnico em Informática',
     'Consultor de Vendas',
     'Marketing Digital',
-    'Psicóloga',
+    'Psicólogo',
   ];
 
   const filteredProfessions = professions.filter(
