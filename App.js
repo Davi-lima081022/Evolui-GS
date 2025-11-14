@@ -16,13 +16,10 @@ import TrainingScreen from './src/screen/TrainingScreen';
 import CoursesScreen from './src/screen/CoursesScreen';
 import PartnersScreen from './src/screen/PartnersScreen';
 import TalksScreen from './src/screen/TalksScreen';
-
-// 🔹 NOVA TELA
 import AboutScreen from './src/screen/AboutScreen';
 
 const Stack = createNativeStackNavigator();
 
-// 🔹 Cabeçalho personalizado
 const CustomHeader = ({ navigation, back }) => (
   <View
     style={{
@@ -33,7 +30,6 @@ const CustomHeader = ({ navigation, back }) => (
       paddingBottom: 10,
     }}
   >
-    {/* Botão VOLTAR */}
     {back && (
       <TouchableOpacity
         onPress={() => navigation.goBack()}
@@ -52,7 +48,6 @@ const CustomHeader = ({ navigation, back }) => (
       </TouchableOpacity>
     )}
 
-    {/* 🔹 Botão SOBRE O APP */}
     <TouchableOpacity
       onPress={() => navigation.navigate('About')}
       style={{
@@ -79,7 +74,6 @@ export default function App() {
           headerTitleAlign: 'center',
         }}
       >
-        {/* Telas principais */}
         <Stack.Screen
           name="Welcome"
           component={WelcomeScreen}
@@ -91,14 +85,12 @@ export default function App() {
         <Stack.Screen name="Career" component={CareerScreen} options={{ title: 'Minha Carreira' }} />
         <Stack.Screen name="Objectives" component={ObjectivesScreen} options={{ title: 'Objetivos Pessoais' }} />
 
-        {/* Trilhas */}
         <Stack.Screen name="KnowledgeTrack" component={KnowledgeTrackScreen} options={{ title: '' }} />
         <Stack.Screen name="Training" component={TrainingScreen} options={{ title: '' }} />
         <Stack.Screen name="Courses" component={CoursesScreen} options={{ title: '' }} />
         <Stack.Screen name="Partners" component={PartnersScreen} options={{ title: '' }} />
         <Stack.Screen name="Talks" component={TalksScreen} options={{ title: '' }} />
 
-        {/* Sobre o App */}
         <Stack.Screen
           name="About"
           component={AboutScreen}
