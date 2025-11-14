@@ -1,0 +1,110 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+// Import das telas
+import WelcomeScreen from './src/screen/WelcomeScreen';
+import LoginScreen from './src/screen/LoginScreen';
+import RegisterScreen from './src/screen/RegisterScreen';
+import CareerScreen from './src/screen/CareerScreen';
+import ObjectivesScreen from './src/screen/ObjectivesScreen';
+import KnowledgeTrackScreen from './src/screen/KnowledgeTrackScreen';
+import SettingsScreen from './src/screen/SettingsScreen';
+import TrainingScreen from './src/screen/TrainingScreen';
+import CoursesScreen from './src/screen/CoursesScreen';
+import PartnersScreen from './src/screen/PartnersScreen';
+import TalksScreen from './src/screen/TalksScreen'; // 🔹 Nova tela adicionada
+
+const Stack = createNativeStackNavigator();
+
+// 🔹 Cabeçalho personalizado (somente “Voltar” + seta)
+const CustomHeader = ({ navigation, back }) => (
+  <View
+    style={{
+      height: 90,
+      backgroundColor: 'transparent',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      paddingBottom: 10,
+    }}
+  >
+    {back && (
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={{
+          position: 'absolute',
+          left: 15,
+          bottom: 12,
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <Ionicons name="chevron-back" size={22} color="#ffffff" />
+        <Text style={{ color: '#ffffff', fontSize: 16, fontWeight: '600' }}>Voltar</Text>
+      </TouchableOpacity>
+    )}
+  </View>
+);
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Welcome"
+        screenOptions={{
+          header: ({ navigation, route, options, back }) => (
+            <CustomHeader navigation={navigation} back={back} />
+          ),
+          headerTransparent: true,
+          headerTitleAlign: 'center',
+        }}
+      >
+        {/* Telas principais */}
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login' }} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Cadastro' }} />
+        <Stack.Screen name="Career" component={CareerScreen} options={{ title: 'Minha Carreira' }} />
+        <Stack.Screen name="Objectives" component={ObjectivesScreen} options={{ title: 'Objetivos Pessoais' }} />
+
+        {/* 🔹 Telas da trilha com cabeçalho limpo */}
+        <Stack.Screen
+          name="KnowledgeTrack"
+          component={KnowledgeTrackScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="Training"
+          component={TrainingScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="Courses"
+          component={CoursesScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="Partners"
+          component={PartnersScreen}
+          options={{ title: '' }}
+        />
+        <Stack.Screen
+          name="Talks"
+          component={TalksScreen}
+          options={{ title: '' }}
+        />
+
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{ title: 'Configurações' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
