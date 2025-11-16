@@ -15,8 +15,14 @@ import {
 export default function CareerScreen({ navigation }) {
   const [inputText, setInputText] = useState('');
   const [selectedProfessions, setSelectedProfessions] = useState([]);
-  const [skills, setSkills] = useState('');
+
+  const [skillInput, setSkillInput] = useState('');
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [showSkillList, setShowSkillList] = useState(false);
+
   const [showList, setShowList] = useState(false);
+
+  const [completedCourses, setCompletedCourses] = useState([]);
 
   const professions = [
     'Engenheiro de Software',
@@ -39,6 +45,18 @@ export default function CareerScreen({ navigation }) {
     'Psicólogo',
   ];
 
+  const skillsList = [
+    'Boa comunicação',
+    'Proativo',
+    'Trabalho em equipe',
+    'Liderança',
+    'Organização',
+    'Criatividade',
+    'Flexibilidade',
+    'Resolução de problemas',
+    'Empatia',
+    'Gestão de tempo',
+  ];
   const filteredProfessions = professions.filter(
     (item) =>
       item.toLowerCase().includes(inputText.toLowerCase()) &&
@@ -55,6 +73,22 @@ export default function CareerScreen({ navigation }) {
     setSelectedProfessions(selectedProfessions.filter((prof) => prof !== item));
   };
 
+  const filteredSkills = skillsList.filter(
+    (item) =>
+      item.toLowerCase().includes(skillInput.toLowerCase()) &&
+      !selectedSkills.includes(item)
+  );
+
+  const handleSelectSkill = (item) => {
+    setSelectedSkills([...selectedSkills, item]);
+    setSkillInput('');
+    setShowSkillList(false);
+  };
+
+  const handleRemoveSkill = (item) => {
+    setSelectedSkills(selectedSkills.filter((skill) => skill !== item));
+  };
+
   const handleNext = () => {
     if (selectedProfessions.length === 0) {
       Alert.alert(
@@ -63,10 +97,12 @@ export default function CareerScreen({ navigation }) {
       );
       return;
     }
-    // Navega para a tela de Objetivos, enviando profissões e habilidades
+
     navigation.navigate('Objectives', {
       selectedProfessions,
-      skills,
+      selectedSkills,
+      completedCourses,       
+      setCompletedCourses     
     });
   };
 
@@ -128,14 +164,46 @@ export default function CareerScreen({ navigation }) {
               )}
             </View>
 
-            <Text style={styles.label}>Habilidades</Text>
+            <Text style={styles.label}>
+              Habilidades <Text style={{ opacity: 0.7 }}>(opcional)</Text>
+            </Text>
+
+            <View style={styles.tagsContainer}>
+              {selectedSkills.map((item, index) => (
+                <View key={index} style={styles.tag}>
+                  <Text style={styles.tagText}>{item}</Text>
+                  <TouchableOpacity onPress={() => handleRemoveSkill(item)}>
+                    <Text style={styles.removeTag}>✕</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+
             <TextInput
               style={styles.input}
-              placeholder="Liste suas principais habilidades..."
+              placeholder="Digite uma habilidade (opcional)..."
               placeholderTextColor="rgba(255,255,255,0.7)"
-              value={skills}
-              onChangeText={setSkills}
+              value={skillInput}
+              onChangeText={(text) => {
+                setSkillInput(text);
+                setShowSkillList(true);
+              }}
+              onFocus={() => setShowSkillList(true)}
             />
+
+            {showSkillList && filteredSkills.length > 0 && (
+              <ScrollView style={styles.list} nestedScrollEnabled={true}>
+                {filteredSkills.map((item) => (
+                  <TouchableOpacity
+                    key={item}
+                    style={styles.listItem}
+                    onPress={() => handleSelectSkill(item)}
+                  >
+                    <Text style={styles.listText}>{item}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            )}
 
             <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
               <Text style={styles.nextText}>Próximo ➜</Text>

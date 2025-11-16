@@ -11,7 +11,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ObjectivesScreen({ navigation, route }) {
-  // Recebendo dados da CareerScreen
   const { selectedProfessions, skills } = route.params;
 
   const objectives = [

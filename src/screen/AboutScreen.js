@@ -14,7 +14,6 @@ export default function AboutScreen() {
 
       let formattedDate = "Data inválida";
 
-      // Regex para quebrar a data do Git
       const pattern = /(\w{3}) (\w{3}) (\d{1,2}) (\d{2}:\d{2}:\d{2}) (\d{4})/;
 
       const match = raw.match(pattern);
@@ -22,7 +21,6 @@ export default function AboutScreen() {
       if (match) {
         const [, , monthStr, day, time, year] = match;
 
-        // Meses para converter para número
         const months = {
           Jan: 0, Feb: 1, Mar: 2, Apr: 3,
           May: 4, Jun: 5, Jul: 6, Aug: 7,
@@ -31,7 +29,6 @@ export default function AboutScreen() {
 
         const month = months[monthStr];
 
-        // Criar data válida
         const parsed = new Date(year, month, day, ...time.split(":"));
 
         formattedDate = parsed.toLocaleString("pt-BR", {
@@ -67,13 +64,11 @@ export default function AboutScreen() {
             educativos feitos para impulsionar sua carreira com praticidade e inovação.
           </Text>
 
-          {/* Versão */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Versão do Aplicativo</Text>
             <Text style={styles.cardValue}>1.0.0</Text>
           </View>
 
-          {/* Commit */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Commit Atual</Text>
             <Text style={styles.hash}>{commit.hash}</Text>
@@ -82,7 +77,6 @@ export default function AboutScreen() {
             <Text style={styles.cardValue}>{commit.date}</Text>
           </View>
 
-          {/* Autor */}
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Desenvolvido por</Text>
             <Text style={styles.cardValue}>

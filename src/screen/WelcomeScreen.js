@@ -14,7 +14,6 @@ export default function WelcomeScreen() {
     >
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-      {/* Gradiente para realçar o texto e botão */}
       <LinearGradient
         colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.6)']}
         style={styles.gradient}

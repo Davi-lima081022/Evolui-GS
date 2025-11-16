@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
   View, 
   Text, 
@@ -8,64 +8,140 @@ import {
   ImageBackground, 
   Linking 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function LecturesScreen({ route }) {
-  const { selectedProfessions } = route.params;
+export default function TalksScreen({ route }) {
+  const { selectedProfessions = [] } = route.params || {};
+  const [completedTalks, setCompletedTalks] = useState([]);
 
-  // PALESTRAS COM LINKS REAIS + PROFISSÕES ASSOCIADAS
-  const allLectures = [
-    {
-      title: 'Inovação no Mercado Atual',
-      desc: 'Como novas tecnologias moldam o futuro das empresas.',
-      link: 'https://www.youtube.com/watch?v=KJjvXc1M5v4',
-      professions: ['Engenheiro de Software', 'Gerente de Projetos', 'Marketing Digital']
-    },
-    {
-      title: 'Sustentabilidade Empresarial',
-      desc: 'Estratégias para empresas reduzirem impacto ambiental.',
-      link: 'https://www.youtube.com/watch?v=z7r6xZ3MzbI',
-      professions: ['Engenheiro Civil', 'Arquiteto', 'Analista Financeiro']
-    },
-    {
-      title: 'Inteligência Emocional no Trabalho',
-      desc: 'Domine suas emoções e fortaleça relacionamentos.',
-      link: 'https://www.youtube.com/watch?v=Y7wG0R4pY6E',
-      professions: ['Psicólogo', 'Professor', 'Médico', 'Enfermeiro']
-    },
-    {
-      title: 'Transformação Digital',
-      desc: 'Como empresas evoluem com tecnologia.',
-      link: 'https://www.youtube.com/watch?v=2kJpKxk0JqY',
-      professions: ['Desenvolvedor Mobile', 'Técnico em Informática', 'Marketing Digital']
-    },
-    {
-      title: 'Liderança Moderna',
-      desc: 'Os novos modelos de liderança no século XXI.',
-      link: 'https://www.youtube.com/watch?v=ReRcHdeUG9Y',
-      professions: ['Gerente de Projetos', 'Analista Financeiro', 'Consultor de Vendas']
-    },
-    {
-      title: 'Criatividade e Solução de Problemas',
-      desc: 'Como pensar fora da caixa de maneira prática.',
-      link: 'https://www.youtube.com/watch?v=fU6n0YjD374',
-      professions: ['Designer UX/UI', 'Engenheiro de Software', 'Arquiteto']
-    },
-    {
-      title: 'Comunicação Persuasiva',
-      desc: 'Aprenda a falar de forma clara, assertiva e influente.',
-      link: 'https://www.youtube.com/watch?v=bW8KjD_0IYQ',
-      professions: ['Consultor de Vendas', 'Advogado', 'Professor']
-    }
+  const STORAGE_KEY = `LECTURES_DONE_${selectedProfessions.join("_") || "ALL"}`;
+
+  const allTalks = [
+
+    // ---------------- ENG. SOFTWARE ----------------
+    { title: 'O Futuro da Engenharia de Software', link: 'https://youtu.be/bbLPpYgl7MI', professions: ['Engenheiro de Software'] },
+    { title: 'Como se Tornar Engenheiro de Software', link: 'https://youtu.be/I4Gx5jVZcWw', professions: ['Engenheiro de Software'] },
+    { title: 'Arquitetura Moderna', link: 'https://youtu.be/3oV9wzE6tDA', professions: ['Engenheiro de Software'] },
+
+    // ---------------- DESENVOLVEDOR MOBILE ----------------
+    { title: 'Tendências em Desenvolvimento Mobile', link: 'https://youtu.be/VfGW0Qiy2I0', professions: ['Desenvolvedor Mobile'] },
+    { title: 'Como Iniciar no Mobile', link: 'https://youtu.be/bUeWZ9G4pDA', professions: ['Desenvolvedor Mobile'] },
+    { title: 'React Native Completo', link: 'https://youtu.be/0-S5a0eXPoc', professions: ['Desenvolvedor Mobile'] },
+
+    // ---------------- ANALISTA DE DADOS ----------------
+    { title: 'Introdução a Data Science', link: 'https://youtu.be/ua-CiDNNj30', professions: ['Analista de Dados'] },
+    { title: 'Carreira em Data Analytics', link: 'https://youtu.be/o6M7A7wB7i8', professions: ['Analista de Dados'] },
+    { title: 'Python p/ Análise de Dados', link: 'https://youtu.be/KzqSDN3mW0Q', professions: ['Analista de Dados'] },
+
+    // ---------------- UX/UI DESIGNER ----------------
+    { title: 'UX Design do Zero', link: 'https://youtu.be/uxf0--uiX0I', professions: ['Designer UX/UI'] },
+    { title: 'Como Entrar em UX/UI', link: 'https://youtu.be/Uu5q3G9FdZw', professions: ['Designer UX/UI'] },
+    { title: 'Design Thinking', link: 'https://youtu.be/6N7Iz-LxB0c', professions: ['Designer UX/UI'] },
+
+    // ---------------- GERENTE DE PROJETOS ----------------
+    { title: 'Gestão Moderna de Projetos', link: 'https://youtu.be/HhP3d_r-bBM', professions: ['Gerente de Projetos'] },
+    { title: 'Scrum na Prática', link: 'https://youtu.be/9TycLR0TqFA', professions: ['Gerente de Projetos'] },
+    { title: 'Alta Performance em Times', link: 'https://youtu.be/WX8LJ2RjJls', professions: ['Gerente de Projetos'] },
+
+    // ---------------- MARKETING DIGITAL ----------------
+    { title: 'Marketing Digital Hoje', link: 'https://youtu.be/9uPpZ-R55X4', professions: ['Marketing Digital'] },
+    { title: 'Início no Marketing Digital', link: 'https://youtu.be/3ZJj9W-bwR4', professions: ['Marketing Digital'] },
+    { title: 'Funil de Vendas Digital', link: 'https://youtu.be/S6xgWwCYV6A', professions: ['Marketing Digital'] },
+
+    // ---------------- ENG. CIVIL ----------------
+    { title: 'Como Funcionam Obras Civis', link: 'https://youtu.be/p1_GVyTV84o', professions: ['Engenheiro Civil'] },
+    { title: 'Carreira na Engenharia Civil', link: 'https://youtu.be/2nz2tN6D-kI', professions: ['Engenheiro Civil'] },
+    { title: 'Fundamentos de Estruturas', link: 'https://youtu.be/VEE0n1SpxsY', professions: ['Engenheiro Civil'] },
+
+    // ---------------- ADVOGADO ----------------
+    { title: 'Direito para Iniciantes', link: 'https://youtu.be/kwx9RSPaDPk', professions: ['Advogado'] },
+    { title: 'Carreira em Advocacia', link: 'https://youtu.be/l4D-b3cR7TA', professions: ['Advogado'] },
+    { title: 'Como Funciona o Direito', link: 'https://youtu.be/VDt8O8i0P_0', professions: ['Advogado'] },
+
+    // ---------------- MÉDICO ----------------
+    { title: 'Como é Ser Médico na Prática', link: 'https://youtu.be/Cs6tqBYkPdw', professions: ['Médico'] },
+    { title: 'Rotina da Medicina', link: 'https://youtu.be/sKFQNR7LJqE', professions: ['Médico'] },
+    { title: 'Profissão Médico', link: 'https://youtu.be/oqKUV5Rfb2A', professions: ['Médico'] },
+
+    // ---------------- ENFERMEIRO ----------------
+    { title: 'Carreira na Enfermagem', link: 'https://youtu.be/y2BSSMSmc5I', professions: ['Enfermeiro'] },
+    { title: 'Primeiros Socorros Profissional', link: 'https://youtu.be/jKx1WUf_2Nc', professions: ['Enfermeiro'] },
+    { title: 'Rotina de Enfermagem', link: 'https://youtu.be/8ZfkWdxzTrI', professions: ['Enfermeiro'] },
+
+    // ---------------- PROFESSOR ----------------
+    { title: 'Desafios da Educação Moderna', link: 'https://youtu.be/3R7Gzdh0dXg', professions: ['Professor'] },
+    { title: 'Como Ensinar Melhor', link: 'https://youtu.be/AFnB8PrjjWA', professions: ['Professor'] },
+    { title: 'Psicologia da Aprendizagem', link: 'https://youtu.be/oT3d5abm-F0', professions: ['Professor'] },
+
+    // ---------------- ELETRICISTA ----------------
+    { title: 'Eletricidade Básica', link: 'https://youtu.be/0O3p8Y-VZ-g', professions: ['Eletricista'] },
+    { title: 'Carreira de Eletricista', link: 'https://youtu.be/fy3IuN8jY9s', professions: ['Eletricista'] },
+    { title: 'Instalações Elétricas', link: 'https://youtu.be/_nbWvDbB88E', professions: ['Eletricista'] },
+
+    // ---------------- MECÂNICO ----------------
+    { title: 'Introdução à Mecânica Automotiva', link: 'https://youtu.be/IUe6QIGJK0I', professions: ['Mecânico'] },
+    { title: 'Carreira de Mecânico', link: 'https://youtu.be/-BdZBSVhQ2I', professions: ['Mecânico'] },
+    { title: 'Como funciona um motor', link: 'https://youtu.be/z2yMBjO6-hY', professions: ['Mecânico'] },
+
+    // ---------------- ARQUITETO ----------------
+    { title: 'Introdução à Arquitetura', link: 'https://youtu.be/dnq2EaYLRh8', professions: ['Arquiteto'] },
+    { title: 'Carreira em Arquitetura', link: 'https://youtu.be/ERKcU9jwELo', professions: ['Arquiteto'] },
+    { title: 'Design Arquitetônico', link: 'https://youtu.be/FfJ-PH1WHaU', professions: ['Arquiteto'] },
+
+    // ---------------- ANALISTA FINANCEIRO ----------------
+    { title: 'Finanças para Iniciantes', link: 'https://youtu.be/0vI0q5cDIeE', professions: ['Analista Financeiro'] },
+    { title: 'Análise Financeira do Zero', link: 'https://youtu.be/7vZfLT1XVOo', professions: ['Analista Financeiro'] },
+    { title: 'Mercado Financeiro Explicado', link: 'https://youtu.be/lFsWna5xZXc', professions: ['Analista Financeiro'] },
+
+    // ---------------- TÉCNICO EM INFORMÁTICA ----------------
+    { title: 'Manutenção de Computadores', link: 'https://youtu.be/7TTNf0-tVIs', professions: ['Técnico em Informática'] },
+    { title: 'Carreira como Técnico', link: 'https://youtu.be/X0nQ2bjIOs8', professions: ['Técnico em Informática'] },
+    { title: 'Redes e Infraestrutura', link: 'https://youtu.be/ALo2lL2cS8A', professions: ['Técnico em Informática'] },
+
+    // ---------------- CONSULTOR DE VENDAS ----------------
+    { title: 'Como Vender Melhor', link: 'https://youtu.be/3J1MbSLgIA4', professions: ['Consultor de Vendas'] },
+    { title: 'Técnicas de Fechamento', link: 'https://youtu.be/yK9hqwYg7PE', professions: ['Consultor de Vendas'] },
+    { title: 'Negociação Profissional', link: 'https://youtu.be/Vlr3Yz1CEPk', professions: ['Consultor de Vendas'] },
+
+    // ---------------- PSICÓLOGO ----------------
+    { title: 'Fundamentos da Psicologia', link: 'https://youtu.be/KhpQHmycrQg', professions: ['Psicólogo'] },
+    { title: 'Carreira em Psicologia', link: 'https://youtu.be/eGc4V1H_ELY', professions: ['Psicólogo'] },
+    { title: 'Neurociência e Comportamento', link: 'https://youtu.be/ywWQ8P5N44I', professions: ['Psicólogo'] },
   ];
 
-  // FILTRAGEM PELAS PROFISSÕES SELECIONADAS
-  const lectures = allLectures.filter(lecture =>
-    lecture.professions.some(prof => selectedProfessions.includes(prof))
+  const talks = allTalks.filter(t =>
+    t.professions.some(p => selectedProfessions.includes(p))
+  );
+  useFocusEffect(
+    useCallback(() => {
+      const loadCompleted = async () => {
+        try {
+          const saved = await AsyncStorage.getItem(STORAGE_KEY);
+          setCompletedTalks(saved ? JSON.parse(saved) : []);
+        } catch (e) {
+          console.log("Erro ao carregar", e);
+        }
+      };
+      loadCompleted();
+    }, [STORAGE_KEY])
   );
 
-  const handleOpenLink = (url) => Linking.openURL(url);
+  const toggleComplete = async (title) => {
+    try {
+      const updated =
+        completedTalks.includes(title)
+          ? completedTalks.filter(t => t !== title)
+          : [...completedTalks, title];
+
+      setCompletedTalks(updated);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    } catch (e) {
+      console.log("Erro ao salvar", e);
+    }
+  };
 
   return (
     <ImageBackground 
@@ -79,37 +155,41 @@ export default function LecturesScreen({ route }) {
       >
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.title}>Palestras</Text>
-          <Text style={styles.subtitle}>
-            Conteúdos incríveis, selecionados para sua área
-          </Text>
+          <Text style={styles.subtitle}>Assista conteúdos profissionais</Text>
 
-          {lectures.length === 0 ? (
-            <Text style={styles.noContent}>
-              Nenhuma palestra disponível para as profissões selecionadas.
-            </Text>
+          {talks.length === 0 ? (
+            <Text style={styles.noContent}>Nenhuma palestra disponível para essa profissão.</Text>
           ) : (
-            lectures.map((item, index) => (
-              <TouchableOpacity 
-                key={index}
-                style={styles.card} 
-                activeOpacity={0.85}
-                onPress={() => handleOpenLink(item.link)}
-              >
-                <LinearGradient
-                  colors={['#4F46E5', '#6366F1']}
-                  style={styles.iconContainer}
-                >
-                  <Ionicons name="mic-outline" size={26} color="#fff" />
-                </LinearGradient>
+            talks.map((item, index) => {
+              const
+                isDone = completedTalks.includes(item.title);
 
-                <View style={styles.textContainer}>
-                  <Text style={styles.cardTitle}>{item.title}</Text>
-                  <Text style={styles.cardDescription}>{item.desc}</Text>
+              return (
+                <View key={index} style={styles.card}>
+                  <LinearGradient colors={['#4F46E5', '#6366F1']} style={styles.iconContainer}>
+                    <Ionicons name="microphone-outline" size={26} color="#fff" />
+                  </LinearGradient>
+
+                  <View style={styles.textContainer}>
+                    <Text style={styles.cardTitle}>{item.title}</Text>
+
+                    <TouchableOpacity onPress={() => Linking.openURL(item.link)} style={styles.linkButton}>
+                      <Text style={styles.linkText}>Assistir Palestra</Text>
+                      <Ionicons name="open-outline" size={18} color="#fff" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                      onPress={() => toggleComplete(item.title)}
+                      style={[styles.completeButton, isDone && styles.completeButtonDone]}
+                    >
+                      <Text style={styles.completeText}>
+                        {isDone ? "Concluída ✔" : "Marcar como Concluída"}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-
-                <Ionicons name="open-outline" size={22} color="#fff" />
-              </TouchableOpacity>
-            ))
+              );
+            })
           )}
         </ScrollView>
       </LinearGradient>
@@ -119,14 +199,18 @@ export default function LecturesScreen({ route }) {
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
-  overlay: { flex: 1, justifyContent: 'center' },
+  overlay: { flex: 1 },
   container: { paddingHorizontal: 20, paddingTop: 60, paddingBottom: 40 },
-  title: { fontSize: 30, fontWeight: '900', color: '#FFF', textAlign: 'center', marginBottom: 10 },
-  subtitle: { fontSize: 16, color: '#E5E5E5', textAlign: 'center', marginBottom: 35 },
-  card: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 20, padding: 20, marginBottom: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
-  iconContainer: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', marginRight: 16 },
+  title: { fontSize: 30, fontWeight: '900', color: '#fff', textAlign: 'center', marginBottom: 10 },
+  subtitle: { fontSize: 16, color: '#ddd', textAlign: 'center', marginBottom: 35 },
+  card: { backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 20, padding: 20, marginBottom: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
+  iconContainer: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
   textContainer: { flex: 1 },
-  cardTitle: { fontSize: 18, fontWeight: '700', color: '#FFF' },
-  cardDescription: { fontSize: 14, color: '#DADADA', marginTop: 4 },
-  noContent: { color: '#fff', fontSize: 16, textAlign: 'center', marginTop: 20 }
+  cardTitle: { fontSize: 18, fontWeight: '700', color: '#fff' },
+  linkButton: { flexDirection: 'row', alignItems: 'center', marginTop: 12 },
+  linkText: { color: '#A5B4FC', fontSize: 14, marginRight: 6 },
+  completeButton: { marginTop: 15, padding: 12, borderRadius: 12, backgroundColor: '#4F46E5', alignItems: 'center' },
+  completeButtonDone: { backgroundColor: 'green' },
+  completeText: { color: '#fff', fontWeight: '700' },
+  noContent: { color: '#fff', fontSize: 16, textAlign: 'center', marginTop: 30 },
 });

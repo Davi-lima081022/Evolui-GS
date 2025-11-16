@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
@@ -6,184 +6,103 @@ import {
   ScrollView, 
   TouchableOpacity, 
   ImageBackground, 
-  Linking 
+  Linking
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function TrainingScreen({ route }) {
-  const { selectedProfessions } = route.params;
 
-  // 🔥 TODOS OS TREINAMENTOS PARA TODAS AS PROFISSÕES  
+  const { selectedProfessions = [] } = route.params || {};
+  const [completedTrainings, setCompletedTrainings] = useState([]);
+
+  useEffect(() => {
+    const loadTrainings = async () => {
+      try {
+        const saved = await AsyncStorage.getItem("TRAININGS_DONE");
+        if (saved) setCompletedTrainings(JSON.parse(saved));
+      } catch (e) {
+        console.log("Erro ao carregar TRAININGS_DONE", e);
+      }
+    };
+    loadTrainings();
+  }, []);
+
+  // ---------- LISTA DE TREINAMENTOS ----------
   const allTrainings = [
-    // ================= ENGENHEIRO DE SOFTWARE =================
-    {
-      title: 'Arquitetura de Sistemas',
-      desc: 'Aprenda padrões, camadas, microsserviços e boas práticas.',
-      link: 'https://www.alura.com.br/curso-online-arquitetura-software',
-      professions: ['Engenheiro de Software']
-    },
-    {
-      title: 'Git e Versionamento Profissional',
-      desc: 'Domine Git, branches, PRs, merge e GitHub Flow.',
-      link: 'https://www.coursera.org/learn/introduction-git-github',
-      professions: ['Engenheiro de Software', 'Desenvolvedor Mobile', 'Técnico em Informática']
-    },
 
-    // ================= DESENVOLVEDOR MOBILE =================
-    {
-      title: 'React Native do Zero ao Avançado',
-      desc: 'Crie apps reais para Android e iOS.',
-      link: 'https://www.udemy.com/course/react-native-completo/',
-      professions: ['Desenvolvedor Mobile']
-    },
-    {
-      title: 'Publicação de Apps',
-      desc: 'Aprenda a publicar apps na Play Store e App Store.',
-      link: 'https://www.udemy.com/course/react-native-publicar-app/',
-      professions: ['Desenvolvedor Mobile']
-    },
+    // TI
+    { title: "Arquitetura de Sistemas", desc: "Microsserviços, padrões e camadas.", link: "https://alura.com.br", professions: ["Engenheiro de Software"] },
+    { title: "Git e Versionamento Profissional", desc: "Branches, merge e GitHub Flow.", link: "https://www.coursera.org", professions: ["Engenheiro de Software", "Desenvolvedor Mobile", "Técnico em Informática"] },
+    { title: "Suporte e Redes", desc: "Infraestrutura, atendimento e redes.", link: "https://www.udemy.com", professions: ["Técnico em Informática"] },
+    { title: "React Native Essentials", desc: "Fundamentos para apps mobile.", link: "https://alura.com.br", professions: ["Desenvolvedor Mobile"] },
+    { title: "APIs REST e JSON", desc: "Integração entre sistemas.", link: "https://youtube.com", professions: ["Desenvolvedor Mobile", "Engenheiro de Software"] },
 
-    // ================= ANALISTA DE DADOS =================
-    {
-      title: 'Power BI Completo',
-      desc: 'Dashboards, ETL, relatórios profissionais.',
-      link: 'https://www.coursera.org/learn/power-bi',
-      professions: ['Analista de Dados']
-    },
-    {
-      title: 'Python para Data Science',
-      desc: 'Análise, pandas, numpy, machine learning.',
-      link: 'https://www.coursera.org/learn/python-data-analysis',
-      professions: ['Analista de Dados']
-    },
+    // Dados
+    { title: "Introdução ao Data Analytics", desc: "Coleta, análise e visualização.", link: "https://www.google.com", professions: ["Analista de Dados"] },
+    { title: "Power BI Profissional", desc: "Dashboards e análise de negócios.", link: "https://www.microsoft.com", professions: ["Analista de Dados", "Analista Financeiro"] },
+    { title: "Fundamentos de SQL", desc: "Consultas, joins e modelagem.", link: "https://udemy.com", professions: ["Analista de Dados"] },
 
-    // ================= DESIGNER UX/UI =================
-    {
-      title: 'UX Research e Prototipação',
-      desc: 'Figma, entrevistas, testes de usabilidade.',
-      link: 'https://www.alura.com.br/curso-online-ux-research',
-      professions: ['Designer UX/UI']
-    },
+    // Design
+    { title: "UX Research Básico", desc: "Pesquisa com usuários.", link: "https://alura.com.br", professions: ["Designer UX/UI"] },
+    { title: "UI Design com Figma", desc: "Interfaces modernas.", link: "https://www.figma.com", professions: ["Designer UX/UI"] },
+    { title: "Prototipação Rápida", desc: "Fluxos e interações.", link: "https://youtube.com", professions: ["Designer UX/UI"] },
 
-    // ================= GERENTE DE PROJETOS =================
-    {
-      title: 'Scrum e Métodos Ágeis',
-      desc: 'Aprenda Scrum na prática e conduza squads.',
-      link: 'https://www.coursera.org/learn/scrum-introducao',
-      professions: ['Gerente de Projetos']
-    },
-    {
-      title: 'Comunicação Eficaz',
-      desc: 'Fale com clareza em reuniões e apresentações.',
-      link: 'https://www.udemy.com/course/comunicacao-eficaz/',
-      professions: ['Gerente de Projetos', 'Consultor de Vendas', 'Marketing Digital']
-    },
+    // Gestão
+    { title: "Scrum e Métodos Ágeis", desc: "Organização de equipes.", link: "https://www.scrum.org", professions: ["Gerente de Projetos"] },
+    { title: "Gestão de Riscos", desc: "Prevenção e controle.", link: "https://www.pmi.org", professions: ["Gerente de Projetos"] },
+    { title: "Planejamento Estratégico", desc: "Objetivos e metas.", link: "https://udemy.com", professions: ["Gerente de Projetos"] },
 
-    // ================= ENGENHEIRO CIVIL =================
-    {
-      title: 'Gerenciamento de Obras',
-      desc: 'Planejamento, execução e controle de obras.',
-      link: 'https://www.udemy.com/course/gerenciamento-de-obras/',
-      professions: ['Engenheiro Civil']
-    },
+    // Eng. Civil
+    { title: "Leitura de Plantas", desc: "Desenhos técnicos.", link: "https://youtube.com", professions: ["Engenheiro Civil"] },
+    { title: "Gestão de Obras", desc: "Processos e execução.", link: "https://senai.com.br", professions: ["Engenheiro Civil"] },
+    { title: "Materiais de Construção", desc: "Tipos e aplicações.", link: "https://google.com", professions: ["Engenheiro Civil"] },
 
-    // ================= MÉDICO & ENFERMEIRO =================
-    {
-      title: 'Primeiros Socorros Profissional',
-      desc: 'Técnicas de atendimento e emergência.',
-      link: 'https://www.coursera.org/learn/first-aid',
-      professions: ['Médico', 'Enfermeiro']
-    },
+    // Saúde
+    { title: "Atendimento Emergencial", desc: "Protocolos de urgência.", link: "https://youtube.com", professions: ["Médico", "Enfermeiro"] },
+    { title: "Boas Práticas Clínicas", desc: "Segurança do paciente.", link: "https://www.gov.br", professions: ["Médico", "Enfermeiro"] },
+    { title: "Primeiros Socorros", desc: "Atuação imediata.", link: "https://cruzvermelha.org", professions: ["Enfermeiro"] },
 
-    // ================= PROFESSOR =================
-    {
-      title: 'Didática e Metodologias Ativas',
-      desc: 'Crie aulas dinâmicas e envolventes.',
-      link: 'https://www.alura.com.br/curso-online-didatica',
-      professions: ['Professor']
-    },
+    // Educação
+    { title: "Didática Moderna", desc: "Técnicas de ensino.", link: "https://youtube.com", professions: ["Professor"] },
+    { title: "Tecnologia na Educação", desc: "Ferramentas digitais.", link: "https://google.com", professions: ["Professor"] },
+    { title: "Psicologia da Aprendizagem", desc: "Comportamento do aluno.", link: "https://udemy.com", professions: ["Professor"] },
 
-    // ================= ADVOGADO =================
-    {
-      title: 'Oratória para Advogados',
-      desc: 'Domine argumentação e comunicação jurídica.',
-      link: 'https://www.udemy.com/course/oratoria-para-advogados/',
-      professions: ['Advogado']
-    },
+    // Direito
+    { title: "Leis Fundamentais", desc: "Base do direito brasileiro.", link: "https://www.planalto.gov.br", professions: ["Advogado"] },
+    { title: "Prática Jurídica", desc: "Rotinas de advocacia.", link: "https://youtube.com", professions: ["Advogado"] },
+    { title: "Processos Civis", desc: "Procedimentos legais.", link: "https://google.com", professions: ["Advogado"] },
 
-    // ================= ELETRICISTA =================
-    {
-      title: 'Eletricidade Residencial',
-      desc: 'Prática e normas de instalação elétrica.',
-      link: 'https://www.senai.br/curso/eletricidade-residencial',
-      professions: ['Eletricista']
-    },
+    // Técnico
+    { title: "Instalações Elétricas", desc: "Segurança e execução.", link: "https://senai.com.br", professions: ["Eletricista"] },
+    { title: "Manutenção de Motores", desc: "Diagnóstico e reparo.", link: "https://youtube.com", professions: ["Mecânico"] },
+    { title: "Plantas e Estruturas", desc: "Fundamentos arquitetônicos.", link: "https://alura.com.br", professions: ["Arquiteto"] },
 
-    // ================= MECÂNICO =================
-    {
-      title: 'Mecânica Automotiva',
-      desc: 'Domine manutenção e diagnóstico de veículos.',
-      link: 'https://www.udemy.com/course/mecanica-automotiva/',
-      professions: ['Mecânico']
-    },
+    // Negócios
+    { title: "Negociação e Vendas", desc: "Técnicas comerciais.", link: "https://google.com", professions: ["Consultor de Vendas"] },
+    { title: "Marketing Digital Básico", desc: "Estratégias e campanhas.", link: "https://udemy.com", professions: ["Marketing Digital"] },
+    { title: "Finanças Pessoais e Corporativas", desc: "Cálculos e análises.", link: "https://youtube.com", professions: ["Analista Financeiro"] },
 
-    // ================= ARQUITETO =================
-    {
-      title: 'Revit e Modelagem 3D',
-      desc: 'Domine projetos BIM com Revit.',
-      link: 'https://www.udemy.com/course/revit-completo/',
-      professions: ['Arquiteto']
-    },
-
-    // ================= ANALISTA FINANCEIRO =================
-    {
-      title: 'Excel Financeiro Avançado',
-      desc: 'Domine fórmulas, dashboards e automações.',
-      link: 'https://www.coursera.org/learn/excel-advanced',
-      professions: ['Analista Financeiro']
-    },
-
-    // ================= TÉCNICO EM INFORMÁTICA =================
-    {
-      title: 'Manutenção de Computadores',
-      desc: 'Diagnóstico, reparos e configurações.',
-      link: 'https://www.udemy.com/course/manutencao-de-computadores/',
-      professions: ['Técnico em Informática']
-    },
-
-    // ================= CONSULTOR DE VENDAS =================
-    {
-      title: 'Técnicas de Vendas e Persuasão',
-      desc: 'Aprenda negociação, rapport e fechamento.',
-      link: 'https://www.udemy.com/course/tecnicas-de-vendas/',
-      professions: ['Consultor de Vendas']
-    },
-
-    // ================= MARKETING DIGITAL =================
-    {
-      title: 'Marketing Digital Completo',
-      desc: 'Tráfego, social media, SEO e campanhas.',
-      link: 'https://www.udemy.com/course/marketing-digital-para-iniciantes/',
-      professions: ['Marketing Digital']
-    },
-
-    // ================= PSICÓLOGO =================
-    {
-      title: 'Psicologia Aplicada',
-      desc: 'Técnicas profissionais da área.',
-      link: 'https://www.coursera.org/learn/psicologia-aplicada',
-      professions: ['Psicólogo']
-    },
+    // Psicologia
+    { title: "Introdução à Psicologia Clínica", desc: "Fundamentos e práticas.", link: "https://google.com", professions: ["Psicólogo"] },
+    { title: "Comunicação Terapêutica", desc: "Relação com pacientes.", link: "https://youtube.com", professions: ["Psicólogo"] },
+    { title: "Entrevista Psicológica", desc: "Técnicas de avaliação.", link: "https://udemy.com", professions: ["Psicólogo"] },
   ];
-
-  // 🔍 Filtragem baseada nas profissões selecionadas
-  const trainings = allTrainings.filter(training =>
-    training.professions.some(prof => selectedProfessions.includes(prof))
+  const trainings = allTrainings.filter(t =>
+    t.professions.some(p => selectedProfessions.includes(p))
   );
+  const toggleTraining = async (title) => {
+    let updated = [...completedTrainings];
 
-  const handleOpenLink = (url) => {
-    Linking.openURL(url);
+    if (updated.includes(title)) {
+      updated = updated.filter(t => t !== title);
+    } else {
+      updated.push(title);
+    }
+
+    await AsyncStorage.setItem("TRAININGS_DONE", JSON.stringify(updated));
+    setCompletedTrainings(updated);
   };
 
   return (
@@ -197,39 +116,56 @@ export default function TrainingScreen({ route }) {
         style={styles.overlay}
       >
         <ScrollView contentContainerStyle={styles.container}>
+          
           <Text style={styles.title}>Treinamentos</Text>
-          <Text style={styles.subtitle}>
-            Desenvolva suas habilidades com conteúdos práticos
-          </Text>
+          <Text style={styles.subtitle}>Conteúdos técnicos recomendados</Text>
 
           {trainings.length === 0 ? (
-            <Text style={styles.noContent}>
-              Nenhum treinamento disponível para essa profissão.
-            </Text>
+            <Text style={styles.noContent}>Nenhum treinamento disponível para essa profissão.</Text>
           ) : (
-            trainings.map((item, index) => (
-              <TouchableOpacity 
-                key={index} 
-                style={styles.card} 
-                activeOpacity={0.85}
-                onPress={() => handleOpenLink(item.link)}
-              >
-                <LinearGradient
-                  colors={['#4F46E5', '#6366F1']}
-                  style={styles.iconContainer}
-                >
-                  <Ionicons name="construct-outline" size={26} color="#fff" />
-                </LinearGradient>
+            trainings.map((item, index) => {
+              const isDone = completedTrainings.includes(item.title);
 
-                <View style={styles.textContainer}>
-                  <Text style={styles.cardTitle}>{item.title}</Text>
-                  <Text style={styles.cardDescription}>{item.desc}</Text>
+              return (
+                <View key={index} style={styles.card}>
+
+                  <LinearGradient
+                    colors={['#4F46E5', '#6366F1']}
+                    style={styles.iconContainer}
+                  >
+                    <Ionicons name="school-outline" size={26} color="#fff" />
+                  </LinearGradient>
+
+                  <View style={styles.textContainer}>
+                    <Text style={styles.cardTitle}>{item.title}</Text>
+                    <Text style={styles.cardDescription}>{item.desc}</Text>
+
+                    <TouchableOpacity 
+                      onPress={() => Linking.openURL(item.link)}
+                      style={styles.linkButton}
+                    >
+                      <Text style={styles.linkText}>Acessar Conteúdo</Text>
+                      <Ionicons name="open-outline" size={18} color="#fff" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                      onPress={() => toggleTraining(item.title)}
+                      style={[
+                        styles.completeButton, 
+                        isDone && styles.completeButtonDone
+                      ]}
+                    >
+                      <Text style={styles.completeText}>
+                        {isDone ? "Concluído ✔" : "Concluir Treinamento"}
+                      </Text>
+                    </TouchableOpacity>
+
+                  </View>
                 </View>
-
-                <Ionicons name="open-outline" size={22} color="#fff" />
-              </TouchableOpacity>
-            ))
+              );
+            })
           )}
+
         </ScrollView>
       </LinearGradient>
     </ImageBackground>
@@ -238,14 +174,54 @@ export default function TrainingScreen({ route }) {
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
-  overlay: { flex: 1, justifyContent: 'center' },
+  overlay: { flex: 1 },
   container: { paddingHorizontal: 20, paddingTop: 60, paddingBottom: 40 },
-  title: { fontSize: 30, fontWeight: '900', color: '#FFFFFF', textAlign: 'center', marginBottom: 10 },
-  subtitle: { fontSize: 16, color: '#E5E5E5', textAlign: 'center', marginBottom: 35 },
-  card: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 20, padding: 20, marginBottom: 18, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
-  iconContainer: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', marginRight: 16 },
+  title: { fontSize: 30, fontWeight: '900', color: '#fff', textAlign: 'center', marginBottom: 10 },
+  subtitle: { fontSize: 16, color: '#ddd', textAlign: 'center', marginBottom: 35 },
+
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)'
+  },
+
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12
+  },
+
   textContainer: { flex: 1 },
-  cardTitle: { fontSize: 18, fontWeight: '700', color: '#FFFFFF' },
-  cardDescription: { fontSize: 14, color: '#DADADA', marginTop: 4 },
-  noContent: { color: '#fff', fontSize: 16, textAlign: 'center', marginTop: 30 }
+  cardTitle: { fontSize: 18, fontWeight: '700', color: '#fff' },
+  cardDescription: { fontSize: 14, color: '#ccc', marginTop: 4 },
+
+  linkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12
+  },
+  linkText: { color: '#A5B4FC', fontSize: 14, marginRight: 6 },
+
+  completeButton: {
+    marginTop: 15,
+    padding: 12,
+    borderRadius: 12,
+    backgroundColor: '#4F46E5',
+    alignItems: 'center'
+  },
+  completeButtonDone: {
+    backgroundColor: 'green'
+  },
+  completeText: {
+    color: '#fff',
+    fontWeight: '700'
+  },
+
+  noContent: { color: '#fff', fontSize: 16, textAlign: 'center', marginTop: 30 },
 });

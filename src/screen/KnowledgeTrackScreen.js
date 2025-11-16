@@ -14,10 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const { width } = Dimensions.get('window');
 
 export default function KnowledgeTrackScreen({ navigation, route }) {
-  // Dados vindos da tela anterior
   const { selectedProfessions, skills, selectedObjectives } = route.params;
-
-  // Conteúdos da trilha (ATUALIZADO)
   const contents = [
     { 
       title: 'Cursos', 
@@ -44,8 +41,6 @@ export default function KnowledgeTrackScreen({ navigation, route }) {
       route: 'Progress' 
     },
   ];
-
-  // Função de navegação
   const handleNavigation = (route) => {
     navigation.navigate(route, {
       selectedProfessions,
