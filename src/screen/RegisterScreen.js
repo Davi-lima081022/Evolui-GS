@@ -10,13 +10,10 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  ImageBackground
+  ImageBackground,
+  Image
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
-// ========================
-// MÁSCARAS
-// ========================
 
 const maskCPF = (value) => {
   return value
@@ -43,12 +40,7 @@ const maskCEP = (value) => {
     .slice(0, 9);
 };
 
-// ========================
-// VALIDAÇÕES
-// ========================
-
 const validateFullName = (name) => name && name.trim().split(" ").length >= 2;
-
 const validateCPF = (cpf) => cpf.replace(/\D/g, '').length === 11;
 
 const validateBirthDate = (birth) => {
@@ -71,10 +63,6 @@ const validateCEP = async (cep) => {
     return false;
   }
 };
-
-// =======================================
-// COMPONENTE PRINCIPAL
-// =======================================
 
 export default function RegisterScreen({ navigation }) {
   const [cpf, setCpf] = useState('');
@@ -146,7 +134,13 @@ export default function RegisterScreen({ navigation }) {
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.container}>
-          <Text style={styles.title}>Criar Conta</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>Criar Conta</Text>
+            <Image
+              source={require('../../assets/Logo.png')}
+              style={styles.logoSmall}
+            />
+          </View>
 
           <Input
             label="Nome Completo"
@@ -215,7 +209,6 @@ export default function RegisterScreen({ navigation }) {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/* MODAL PREMIUM */}
       <Modal transparent visible={modalVisible} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalBox}>
@@ -246,10 +239,6 @@ export default function RegisterScreen({ navigation }) {
   );
 }
 
-// =======================================
-// COMPONENTE INPUT PREMIUM
-// =======================================
-
 const Input = ({ label, error, ...props }) => (
   <View style={{ marginBottom: 18 }}>
     <Text style={styles.label}>{label}</Text>
@@ -262,10 +251,6 @@ const Input = ({ label, error, ...props }) => (
   </View>
 );
 
-// =======================================
-// ESTILOS PREMIUM
-// =======================================
-
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -276,11 +261,20 @@ const styles = StyleSheet.create({
     padding: 22,
     paddingTop: 70,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  logoSmall: {
+    width: 45,
+    height: 45,
+    marginLeft: 10,
+  },
   title: {
     fontSize: 30,
     fontWeight: '800',
     color: '#fff',
-    marginBottom: 30,
   },
   label: {
     fontSize: 15,

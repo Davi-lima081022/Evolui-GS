@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, StatusBar, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -19,7 +19,15 @@ export default function WelcomeScreen() {
         style={styles.gradient}
       >
         <View style={styles.content}>
-          <Text style={styles.title}>Bem-vindo ao Evolui+</Text>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require('../../assets/Logo.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
+
+          <Text style={styles.title}>Bem-vindo ao Evoluir+</Text>
           <Text style={styles.subtitle}>aprenda e avance em sua jornada.</Text>
 
           <TouchableOpacity
@@ -55,6 +63,23 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
+  },
+  logoContainer: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  logo: {
+    width: '70%',
+    height: '70%',
   },
   title: {
     fontSize: 34,

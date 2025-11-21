@@ -37,7 +37,7 @@ export default function ProgressScreen({ route }) {
         }
       };
       loadProgress();
-    }, [LECTURES_KEY]) 
+    }, [LECTURES_KEY])
   );
 
   const coursePercentage = Math.min(completedCourses * 20, 100);
@@ -51,23 +51,35 @@ export default function ProgressScreen({ route }) {
   ];
 
   return (
-    <ImageBackground source={require('../../assets/Knowledge.png')} style={styles.background} resizeMode="cover">
-      <LinearGradient colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.85)']} style={styles.overlay}>
+    <ImageBackground 
+      source={require('../../assets/Knowledge.png')} 
+      style={styles.background} 
+      resizeMode="cover"
+    >
+      <LinearGradient 
+        colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.85)']} 
+        style={styles.overlay}
+      >
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.title}>Meu Progresso</Text>
           <Text style={styles.subtitle}>Acompanhe sua evolução ao longo da sua jornada</Text>
 
           {progress.map((item, index) => (
             <View key={index} style={styles.card}>
-              <LinearGradient colors={['#4F46E5', '#6366F1']} style={styles.iconContainer}>
+              <LinearGradient 
+                colors={['#4F46E5', '#6366F1']} 
+                style={styles.iconContainer}
+              >
                 <Ionicons name={item.icon} size={26} color="#fff" />
               </LinearGradient>
 
               <View style={styles.textContainer}>
                 <Text style={styles.cardTitle}>{item.title}</Text>
+
                 <View style={styles.progressBarBackground}>
                   <View style={[styles.progressBarFill, { width: `${item.percentage}%` }]} />
                 </View>
+
                 <Text style={styles.percentageText}>{item.percentage}%</Text>
               </View>
             </View>

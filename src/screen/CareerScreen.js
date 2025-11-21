@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ImageBackground,
+  Image,
 } from 'react-native';
 
 export default function CareerScreen({ navigation }) {
@@ -57,6 +58,7 @@ export default function CareerScreen({ navigation }) {
     'Empatia',
     'Gestão de tempo',
   ];
+
   const filteredProfessions = professions.filter(
     (item) =>
       item.toLowerCase().includes(inputText.toLowerCase()) &&
@@ -101,8 +103,8 @@ export default function CareerScreen({ navigation }) {
     navigation.navigate('Objectives', {
       selectedProfessions,
       selectedSkills,
-      completedCourses,       
-      setCompletedCourses     
+      completedCourses,
+      setCompletedCourses,
     });
   };
 
@@ -121,7 +123,14 @@ export default function CareerScreen({ navigation }) {
             contentContainerStyle={styles.container}
             keyboardShouldPersistTaps="handled"
           >
-            <Text style={styles.title}>Monte sua História</Text>
+            <View style={styles.headerRow}>
+              <Image
+                source={require('../../assets/Logo.png')}
+                style={styles.logoSmall}
+                resizeMode="contain"
+              />
+              <Text style={styles.title}>Monte sua Carreira</Text>
+            </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Profissões / Experiências</Text>
@@ -218,18 +227,92 @@ export default function CareerScreen({ navigation }) {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.55)' },
-  container: { flexGrow: 1, justifyContent: 'center', padding: 25, paddingTop: 120 },
-  title: { fontSize: 26, fontWeight: '700', color: '#FFF', textAlign: 'center', marginBottom: 35, letterSpacing: 0.5 },
+
+  container: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 25,
+    paddingTop: 120,
+  },
+
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 35,
+  },
+
+  logoSmall: {
+    width: 50,
+    height: 50,
+    marginRight: 12,
+  },
+
+  title: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#FFF',
+    textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+
   label: { fontSize: 16, fontWeight: '600', color: '#FFF', marginBottom: 10 },
   inputGroup: { marginBottom: 25 },
-  tagsContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 10 },
-  tag: { flexDirection: 'row', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 20, paddingHorizontal: 12, paddingVertical: 6 },
+
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 10,
+  },
+
+  tag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+
   tagText: { color: '#FFF', fontWeight: '500', marginRight: 6 },
   removeTag: { color: '#FF6B6B', fontWeight: 'bold', fontSize: 14 },
-  input: { width: '100%', borderWidth: 1, borderColor: 'rgba(255,255,255,0.4)', borderRadius: 12, padding: 12, color: '#FFF', backgroundColor: 'rgba(255,255,255,0.15)', fontSize: 15 },
-  list: { width: '100%', maxHeight: 160, backgroundColor: 'rgba(255,255,255,0.95)', borderRadius: 10, marginTop: 5 },
-  listItem: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#EEE' },
+
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.4)',
+    borderRadius: 12,
+    padding: 12,
+    color: '#FFF',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    fontSize: 15,
+  },
+
+  list: {
+    width: '100%',
+    maxHeight: 160,
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderRadius: 10,
+    marginTop: 5,
+  },
+
+  listItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEE',
+  },
+
   listText: { fontSize: 16, color: '#333' },
-  nextButton: { backgroundColor: '#FFF', padding: 16, borderRadius: 14, alignItems: 'center', marginTop: 30, elevation: 5 },
+
+  nextButton: {
+    backgroundColor: '#FFF',
+    padding: 16,
+    borderRadius: 14,
+    alignItems: 'center',
+    marginTop: 30,
+    elevation: 5,
+  },
+
   nextText: { color: '#007AFF', fontSize: 18, fontWeight: '700' },
 });
