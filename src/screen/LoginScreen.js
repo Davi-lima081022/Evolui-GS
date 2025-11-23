@@ -12,56 +12,25 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import api from '../services/api';
 
 export default function LoginScreen({ navigation }) {
-  const [cpf, setCpf] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const formatCPF = (value) => {
-    value = value.replace(/\D/g, '');
-    if (value.length <= 11) {
-      value = value
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    }
-    return value;
-  };
+  const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
-  const handleCpfChange = (text) => setCpf(formatCPF(text));
-
-  const validarCPF = (cpf) => {
-    cpf = cpf.replace(/[^\d]+/g, '');
-    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-
-    let soma = 0;
-    for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
-    let resto = 11 - (soma % 11);
-    if (resto >= 10) resto = 0;
-    if (resto !== parseInt(cpf.charAt(9))) return false;
-
-    soma = 0;
-    for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
-    resto = 11 - (soma % 11);
-    if (resto >= 10) resto = 0;
-
-    return resto === parseInt(cpf.charAt(10));
-  };
-
-  const handleLogin = () => {
-    if (!cpf || !password) {
+  const handleLogin = async () => {
+    if (!email || !password) {
       Alert.alert('Erro', 'Preencha todos os campos.');
       return;
     }
 
-    if (cpf.length < 14) {
-      Alert.alert('Erro', 'Digite um CPF completo.');
-      return;
-    }
-
-    if (!validarCPF(cpf)) {
-      Alert.alert('Erro', 'CPF inválido.');
+    if (!validateEmail(email)) {
+      Alert.alert('Erro', 'Digite um e-mail válido.');
       return;
     }
 
@@ -70,8 +39,34 @@ export default function LoginScreen({ navigation }) {
       return;
     }
 
-    Alert.alert('Sucesso', 'Login realizado com sucesso!');
-    navigation.navigate('Career');
+    try {
+      const response = await api.post('/api/auth/login', {
+        email: email,
+        senha: password,
+      });
+
+      console.log("LOGIN RESPONSE:", response.data);
+      if (response.data?.token) {
+        await AsyncStorage.setItem('token', response.data.token);
+        console.log("TOKEN SALVO:", response.data.token);
+      }
+
+      Alert.alert('Sucesso', 'Login realizado!');
+      navigation.navigate('Career');
+
+    } catch (err) {
+      console.log("LOGIN ERROR:", err.response?.data || err);
+
+      if (err.response?.status === 403) {
+        Alert.alert('Erro', 'Senha incorreta ou usuário não encontrado.');
+      } else if (err.response?.status === 404) {
+        Alert.alert('Erro', 'Usuário não encontrado.');
+      } else if (err.response?.status === 400) {
+        Alert.alert('Erro', 'Credenciais inválidas.');
+      } else {
+        Alert.alert('Erro', 'Não foi possível fazer login.');
+      }
+    }
   };
 
   return (
@@ -88,21 +83,18 @@ export default function LoginScreen({ navigation }) {
             resizeMode="contain"
           />
         </View>
-
         <Text style={styles.title}>Bem-vindo 👋</Text>
         <Text style={styles.subtitle}>Faça seu login para continuar</Text>
-
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Digite seu CPF"
+            placeholder="Digite seu e-mail"
             placeholderTextColor="rgba(255,255,255,0.55)"
-            keyboardType="numeric"
-            value={cpf}
-            onChangeText={handleCpfChange}
-            maxLength={14}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
           />
-
           <View style={styles.passwordWrapper}>
             <TextInput
               style={[styles.input, { paddingRight: 45 }]}
@@ -118,14 +110,14 @@ export default function LoginScreen({ navigation }) {
               onPress={() => setShowPassword(!showPassword)}
             >
               <Ionicons 
-                name={showPassword ? "eye-off" : "eye"} 
-                size={22} 
-                color="#fff" 
+                name={showPassword ? "eye-off" : "eye"}
+                size={22}
+                color="#fff"
               />
             </TouchableOpacity>
           </View>
-        </View>
 
+        </View>
         <LinearGradient
           colors={['#1E90FF', '#007AFF']}
           style={styles.button}
@@ -142,6 +134,7 @@ export default function LoginScreen({ navigation }) {
             Não tem conta? <Text style={{ fontWeight: 'bold' }}>Cadastre-se</Text>
           </Text>
         </TouchableOpacity>
+
       </View>
     </ImageBackground>
   );
@@ -149,13 +142,15 @@ export default function LoginScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
+
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: 'rgba(0,0,0,0.55)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,
   },
+
   logoContainer: {
     width: 130,
     height: 130,
@@ -164,32 +159,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 25,
-    shadowColor: '#000',
-    shadowOpacity: 0.20,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
   },
+
   logo: {
     width: '70%',
     height: '70%',
   },
+
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     color: '#fff',
     marginBottom: 5,
-    textAlign: 'center',
   },
+
   subtitle: {
     fontSize: 16,
     color: '#dcdcdc',
     marginBottom: 30,
-    textAlign: 'center',
   },
+
   inputContainer: {
     width: '100%',
     marginBottom: 20,
   },
+
   input: {
     width: '100%',
     backgroundColor: 'rgba(255,255,255,0.15)',
@@ -201,38 +195,39 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+
   passwordWrapper: {
-    position: 'relative',
     width: '100%',
+    justifyContent: 'center',
   },
+
   iconButton: {
     position: 'absolute',
     right: 12,
-    top: 15,
+    top: '30%',
+    transform: [{ translateY: -12 }],
   },
+
   button: {
     width: '100%',
     borderRadius: 12,
-    shadowColor: '#007AFF',
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 5,
     marginBottom: 15,
   },
+
   buttonInner: {
     alignItems: 'center',
     paddingVertical: 14,
   },
+
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
+
   linkText: {
     color: '#fff',
     fontSize: 15,
     marginTop: 10,
-    textAlign: 'center',
   },
 });

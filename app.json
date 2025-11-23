@@ -25,13 +25,21 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "extra": {
-      "commitFilePath": "./assets/commit.txt"
+      "commitFilePath": "./assets/commit.txt",
+      "eas": {
+        "projectId": "8bd12212-3939-4d6a-b3c5-4351ee82f192"
+      }
     },
-
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "owner": "davilima081022",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/8bd12212-3939-4d6a-b3c5-4351ee82f192"
+    }
   }
 }
