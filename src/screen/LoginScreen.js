@@ -13,7 +13,6 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import api from '../services/api';
 
 export default function LoginScreen({ navigation }) {
@@ -24,8 +23,13 @@ export default function LoginScreen({ navigation }) {
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!email.trim() || !password.trim()) {
       Alert.alert('Erro', 'Preencha todos os campos.');
+      return;
+    }
+
+    if (email.includes(" ")) {
+      Alert.alert('Erro', 'O e-mail não pode conter espaços.');
       return;
     }
 
@@ -35,37 +39,59 @@ export default function LoginScreen({ navigation }) {
     }
 
     if (password.length < 6) {
-      Alert.alert('Erro', 'A senha deve ter pelo menos 6 caracteres.');
+      Alert.alert('Erro', 'A senha deve ter no mínimo 6 caracteres.');
+      return;
+    }
+
+    if (password.includes(" ")) {
+      Alert.alert('Erro', 'A senha não pode conter espaços.');
       return;
     }
 
     try {
       const response = await api.post('/api/auth/login', {
-        email: email,
+        email: email.trim(),
         senha: password,
       });
 
-      console.log("LOGIN RESPONSE:", response.data);
       if (response.data?.token) {
         await AsyncStorage.setItem('token', response.data.token);
-        console.log("TOKEN SALVO:", response.data.token);
       }
 
       Alert.alert('Sucesso', 'Login realizado!');
       navigation.navigate('Career');
 
     } catch (err) {
-      console.log("LOGIN ERROR:", err.response?.data || err);
+      if (err.message === 'Network Error') {
+        Alert.alert('Erro', 'Sem conexão com a internet.');
+        return;
+      }
 
-      if (err.response?.status === 403) {
-        Alert.alert('Erro', 'Senha incorreta ou usuário não encontrado.');
-      } else if (err.response?.status === 404) {
-        Alert.alert('Erro', 'Usuário não encontrado.');
-      } else if (err.response?.status === 400) {
+      const status = err.response?.status;
+
+      if (status === 400) {
         Alert.alert('Erro', 'Credenciais inválidas.');
-      } else {
+      }
+      else if (status === 401) {
+        Alert.alert('Erro', 'Não autorizado. Verifique suas credenciais.');
+      }
+      else if (status === 403) {
+        Alert.alert('Erro', 'Senha incorreta ou usuário não encontrado.');
+      }
+      else if (status === 404) {
+        Alert.alert('Erro', 'Usuário não encontrado.');
+      }
+      else if (status === 423) {
+        Alert.alert('Conta bloqueada', 'Sua conta está temporariamente bloqueada.');
+      }
+      else if (status === 429) {
+        Alert.alert('Erro', 'Muitas tentativas. Tente novamente mais tarde.');
+      }
+      else {
         Alert.alert('Erro', 'Não foi possível fazer login.');
       }
+
+      console.log("LOGIN ERROR:", err.response?.data || err);
     }
   };
 
@@ -76,16 +102,19 @@ export default function LoginScreen({ navigation }) {
       resizeMode="cover"
     >
       <View style={styles.overlay}>
+
         <View style={styles.logoContainer}>
-          <Image
-            source={require('../../assets/Logo.png')}
-            style={styles.logo}
-            resizeMode="contain"
+          <Image 
+            source={require('../../assets/Logo.png')} 
+            style={styles.logo} 
+            resizeMode="contain" 
           />
         </View>
+
         <Text style={styles.title}>Bem-vindo 👋</Text>
         <Text style={styles.subtitle}>Faça seu login para continuar</Text>
         <View style={styles.inputContainer}>
+
           <TextInput
             style={styles.input}
             placeholder="Digite seu e-mail"
@@ -95,6 +124,7 @@ export default function LoginScreen({ navigation }) {
             value={email}
             onChangeText={setEmail}
           />
+
           <View style={styles.passwordWrapper}>
             <TextInput
               style={[styles.input, { paddingRight: 45 }]}
