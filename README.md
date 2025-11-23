@@ -5,7 +5,7 @@ Rodrigo Alcides Bohac Ríos - RM 554826
 
 Link do vídeo youtube: https://youtu.be/PKEC5EDcFYw?si=YXedIUK061HbSC1b
 
-Link do Expo Dev:
+Link do Expo Dev: https://expo.dev/preview/update?message=Vers%C3%A3o+final+da+GS&updateRuntimeVersion=1.0.0&createdAt=2025-11-23T18%3A12%3A05.338Z&slug=exp&projectId=8bd12212-3939-4d6a-b3c5-4351ee82f192&group=87763c99-2731-48d2-b90d-51ba87ebd6e6
 
 
 O Evoluir + 
