@@ -4,8 +4,11 @@ Davi Alves de Lima - RM 556008
 Rodrigo Alcides Bohac Ríos - RM 554826 
 
 Link do vídeo youtube:
-O Evoluir + 
 
+Link do Expo Dev:
+
+
+O Evoluir + 
 Este projeto tem como objetivo avaliar questões ligadas ao etarismo face às novas condições de trabalho
 essencialmente, aos profissionais que buscarão requalificação a partir de 30 anos. 
 
