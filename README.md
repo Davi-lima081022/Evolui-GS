@@ -3,7 +3,7 @@ Celina Alcântara do Carmo - RM 558090
 Davi Alves de Lima - RM 556008 
 Rodrigo Alcides Bohac Ríos - RM 554826 
 
-Link do vídeo youtube:
+Link do vídeo youtube: https://youtu.be/PKEC5EDcFYw?si=YXedIUK061HbSC1b
 
 Link do Expo Dev:
 
